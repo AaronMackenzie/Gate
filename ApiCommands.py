@@ -1,3 +1,4 @@
+#asset list https://www.nseindia.com/get-quotes/equity?symbol=GOLDBEES
 # Import the necessary module or package
 from kite_app import KiteApp  # Import the KiteApp class from the kite_app module
 import datetime  # Import the datetime module for handling date and time operations
