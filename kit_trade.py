@@ -94,14 +94,16 @@ class KiteApp:
         return data
 
     def historical_data(self, instrument_token, from_date, to_date, interval, continuous=False, oi=False):
-        params = {"from": from_date,
-                  "to": to_date,
-                  "interval": interval,
-                  "continuous": 1 if continuous else 0,
-                  "oi": 1 if oi else 0}
-        lst = self.session.get(
-            f"{self.root_url}/instruments/historical/{instrument_token}/{interval}", params=params,
-            headers=self.headers).json()["data"]["candles"]
+    params = {"from": from_date,
+              "to": to_date,
+              "interval": interval,
+              "continuous": 1 if continuous else 0,
+              "oi": 1 if oi else 0}
+    response = self.session.get(
+        f"{self.root_url}/instruments/historical/{instrument_token}/{interval}", params=params,
+        headers=self.headers)
+    if response.status_code == 200:
+        lst = response.json()["data"]["candles"]
         records = []
         for i in lst:
             record = {"date": dateutil.parser.parse(i[0]), "open": i[1], "high": i[2], "low": i[3],
@@ -110,6 +112,9 @@ class KiteApp:
                 record["oi"] = i[6]
             records.append(record)
         return records
+    else:
+        print("No Buy or Sell Signal")
+        return None
 
     def margins(self):
         margins = self.session.get(f"{self.root_url}/user/margins", headers=self.headers).json()["data"]
