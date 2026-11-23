@@ -1,3 +1,4 @@
+import os
 from kite_trade import KiteApp
 import datetime
 import time
@@ -17,7 +18,10 @@ def check_stochastic_sell(stoch):
         return False
 
 # Replace 'enctoken' with your actual encrypted token
-enctoken = '/ba+VmUolzQByvCBW/iHBfqb4LFxfpr0QTXdMz2bwBBWLXvDkUQtyQIWYTrxunYxSIdP0vL64kwfo1+tsV8JTeiOSlGoqS65axA7D1HXABU7R+QHf0ywog=='
+# Session token is read from the environment, never stored in the source (see README).
+enctoken = os.environ.get('KITE_ENCTOKEN')
+if not enctoken:
+    raise SystemExit('Set the KITE_ENCTOKEN environment variable first (see README).')
 # Initialize KiteApp object with the encrypted token
 kite = KiteApp(enctoken=enctoken)
 

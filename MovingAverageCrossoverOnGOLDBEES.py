@@ -1,3 +1,4 @@
+import os
 from kite_trade import KiteApp
 import datetime
 import time
@@ -16,7 +17,10 @@ def fetch_historical_data(instrument_token, from_datetime, to_datetime, interval
     return kite.historical_data(instrument_token, from_datetime, to_datetime, interval, continuous=False, oi=False)
 
 # Replace 'enctoken' with your actual encrypted token
-enctoken = '2cAgadk8SspD+exr+sN8+HO12MbPNTxx7uCOhSNOZtqNo7MrIcjtCMo7/dVBF9BN+MAWEjDwMwxjex7IQrTOWapBUempD6JBH0fSt1mb3l6qTwM6qvXogQ=='
+# Session token is read from the environment, never stored in the source (see README).
+enctoken = os.environ.get('KITE_ENCTOKEN')
+if not enctoken:
+    raise SystemExit('Set the KITE_ENCTOKEN environment variable first (see README).')
 # Initialize KiteApp object with the encrypted token
 kite = KiteApp(enctoken=enctoken)
 
