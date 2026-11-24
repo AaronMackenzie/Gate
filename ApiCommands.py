@@ -1,7 +1,6 @@
 #asset list https://www.nseindia.com/get-quotes/equity?symbol=GOLDBEES
 # Import the necessary module or package
-import os
-from kit_trade import KiteApp  # KiteApp lives in kit_trade.py in this repository
+from kite_app import KiteApp  # Import the KiteApp class from the kite_app module
 import datetime  # Import the datetime module for handling date and time operations
 
 # Obtain the 'enctoken' manually from the 'kite.zerodha.com' website
@@ -10,12 +9,7 @@ import datetime  # Import the datetime module for handling date and time operati
 # Navigate to the 'Network' tab and press Ctrl+R (Windows) or Command+R (Mac)
 # Click on 'Positions' and then click on 'Headers'
 # Look for 'Authorisation' and copy the 'enctoken' value
-enctoken = os.environ.get('KITE_ENCTOKEN')  # export KITE_ENCTOKEN=... in your shell; never paste it into this file
-if not enctoken:
-    raise SystemExit('Set the KITE_ENCTOKEN environment variable first (see README).')
-
-# Order examples below only run when KITE_PLACE_ORDERS=1, so running this file cannot place a trade by accident.
-PLACE_ORDERS = os.environ.get('KITE_PLACE_ORDERS') == '1'
+enctoken = "YOUR_ENCTOKEN_HERE"  # Replace "YOUR_ENCTOKEN_HERE" with the actual 'enctoken' obtained
 
 # Create an instance of the KiteApp class with the provided 'enctoken'
 kite = KiteApp(enctoken=enctoken)
@@ -42,40 +36,37 @@ to_datetime = datetime.datetime.now()                                 # End date
 interval = "5minute"                                                  # Interval for data (e.g., 5-minute intervals)
 print(kite.historical_data(instrument_token, from_datetime, to_datetime, interval, continuous=False, oi=False))
 
-if PLACE_ORDERS:
-    # Place Order
-    order = kite.place_order(variety=kite.VARIETY_REGULAR,               # Type of order variety (e.g., regular order)
-                             exchange=kite.EXCHANGE_NSE,                  # Exchange for the order (e.g., NSE)
-                             tradingsymbol="ACC",                        # Trading symbol of the instrument
-                             transaction_type=kite.TRANSACTION_TYPE_BUY,  # Type of transaction (e.g., Buy)
-                             quantity=1,                                 # Quantity of the instrument
-                             product=kite.PRODUCT_MIS,                   # Product type (e.g., MIS)
-                             order_type=kite.ORDER_TYPE_MARKET,          # Type of order (e.g., Market order)
-                             price=None,                                 # Price of the order (None for market order)
-                             validity=None,                              # Validity of the order (e.g., Day)
-                             disclosed_quantity=None,                    # Disclosed quantity for disclosed order
-                             trigger_price=None,                         # Trigger price for trigger-based order
-                             squareoff=None,                             # Square off value for square off order
-                             stoploss=None,                              # Stop loss value for stop loss order
-                             trailing_stoploss=None,                     # Trailing stop loss value for trailing stop loss order
-                             tag="TradeViaPython")                       # Tag for the order
+# Place Order
+order = kite.place_order(variety=kite.VARIETY_REGULAR,               # Type of order variety (e.g., regular order)
+                         exchange=kite.EXCHANGE_NSE,                  # Exchange for the order (e.g., NSE)
+                         tradingsymbol="ACC",                        # Trading symbol of the instrument
+                         transaction_type=kite.TRANSACTION_TYPE_BUY,  # Type of transaction (e.g., Buy)
+                         quantity=1,                                 # Quantity of the instrument
+                         product=kite.PRODUCT_MIS,                   # Product type (e.g., MIS)
+                         order_type=kite.ORDER_TYPE_MARKET,          # Type of order (e.g., Market order)
+                         price=None,                                 # Price of the order (None for market order)
+                         validity=None,                              # Validity of the order (e.g., Day)
+                         disclosed_quantity=None,                    # Disclosed quantity for disclosed order
+                         trigger_price=None,                         # Trigger price for trigger-based order
+                         squareoff=None,                             # Square off value for square off order
+                         stoploss=None,                              # Stop loss value for stop loss order
+                         trailing_stoploss=None,                     # Trailing stop loss value for trailing stop loss order
+                         tag="TradeViaPython")                       # Tag for the order
 
-    print(order)  # Print the order details
+print(order)  # Print the order details
 
-    # Modify Order
-    kite.modify_order(variety=kite.VARIETY_REGULAR,                      # Type of order variety (e.g., regular order)
-                      order_id="order_id",                               # ID of the order to be modified
-                      parent_order_id=None,                              # Parent order ID if applicable
-                      quantity=5,                                        # New quantity for the order
-                      price=200,                                         # New price for the order
-                      order_type=kite.ORDER_TYPE_LIMIT,                  # New type of order (e.g., Limit order)
-                      trigger_price=None,                                # New trigger price for trigger-based order
-                      validity=kite.VALIDITY_DAY,                        # New validity for the order (e.g., Day)
-                      disclosed_quantity=None)                           # New disclosed quantity for disclosed order
+# Modify Order
+kite.modify_order(variety=kite.VARIETY_REGULAR,                      # Type of order variety (e.g., regular order)
+                  order_id="order_id",                               # ID of the order to be modified
+                  parent_order_id=None,                              # Parent order ID if applicable
+                  quantity=5,                                        # New quantity for the order
+                  price=200,                                         # New price for the order
+                  order_type=kite.ORDER_TYPE_LIMIT,                  # New type of order (e.g., Limit order)
+                  trigger_price=None,                                # New trigger price for trigger-based order
+                  validity=kite.VALIDITY_DAY,                        # New validity for the order (e.g., Day)
+                  disclosed_quantity=None)                           # New disclosed quantity for disclosed order
 
-    # Cancel Order
-    kite.cancel_order(variety=kite.VARIETY_REGULAR,                      # Type of order variety (e.g., regular order)
-                      order_id="order_id",                               # ID of the order to be cancelled
-                      parent_order_id=None)                              # Parent order ID if applicable
-else:
-    print("Order examples skipped (set KITE_PLACE_ORDERS=1 to run them).")
+# Cancel Order
+kite.cancel_order(variety=kite.VARIETY_REGULAR,                      # Type of order variety (e.g., regular order)
+                  order_id="order_id",                               # ID of the order to be cancelled
+                  parent_order_id=None)                              # Parent order ID if applicable
